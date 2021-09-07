@@ -1,0 +1,8 @@
+# short-description: Create i.MX8M EVK eMMC card image with a boot partition
+# long-description: Creates a partitioned eMMC card image. Boot files
+# are located in the first ext4 partition.
+
+part --source rawcopy --sourceparams="file=flash.bin" --ondisk mmcblk --no-table --align 33 --size 10M
+
+part / --source rootfs --ondisk mmcblk1 --fstype=ext4 --label rootfs1 --active --align 4096
+part / --source rootfs --ondisk mmcblk1 --fstype=ext4 --label rootfs2 --active --align 4096

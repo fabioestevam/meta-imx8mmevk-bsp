@@ -1,0 +1,5 @@
+define KMACHINE imx8mmevk
+define KTYPE standard
+define KARCH arm64
+branch imx8mmevk
+kconf hardware imx8mmevk.cfg

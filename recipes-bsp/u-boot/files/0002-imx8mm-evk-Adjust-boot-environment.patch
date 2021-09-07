@@ -1,0 +1,38 @@
+From 5b326348c26c3832e4e5aefbc24546037b5f9718 Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@denx.de>
+Date: Mon, 6 Sep 2021 22:52:28 -0300
+Subject: [PATCH 2/3] imx8mm-evk: Adjust boot environment
+
+imx8mm-evk uses distro boot mechanism.
+
+Use a simpler 'bootcmd' and 'bootargs'approach.
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ include/configs/imx8mm_evk.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/include/configs/imx8mm_evk.h b/include/configs/imx8mm_evk.h
+index 8f3dd8fb61..1207e78563 100644
+--- a/include/configs/imx8mm_evk.h
++++ b/include/configs/imx8mm_evk.h
+@@ -49,12 +49,14 @@
+ 	"image=Image\0" \
+ 	"console=ttymxc1,115200\0" \
+ 	"fdt_addr_r=0x43000000\0"			\
++	"fdt_addr=0x43000000\0"			\
+ 	"boot_fit=no\0" \
+ 	"fdtfile=imx8mm-evk.dtb\0" \
+ 	"initrd_addr=0x43800000\0"		\
+ 	"bootm_size=0x10000000\0" \
+-	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
+-	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
++	"mmcpart=1\0" \
++	"mmcargs=setenv bootargs root=/dev/mmcblk1p${mmcpart} rw rootwait\0" \
++	"bootcmd=run mmcargs; mmc dev 1; load mmc 1:${mmcpart} ${loadaddr}  boot/Image;load mmc 1:${mmcpart} ${fdt_addr}  boot/imx8mm-evk.dtb; booti ${loadaddr} - ${fdt_addr}\0" \
+ 
+ /* Link Definitions */
+ #define CONFIG_LOADADDR			0x40480000
+-- 
+2.25.1
+

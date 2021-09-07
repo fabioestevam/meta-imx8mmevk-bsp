@@ -1,0 +1,188 @@
+From acddd3a72ba6dedf5308f1b95b09b143b3913adc Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@denx.de>
+Date: Tue, 7 Sep 2021 08:29:39 -0300
+Subject: [PATCH] Revert "imx8mm_evk: switch to use binman to pack images"
+
+This reverts commit 8996e6b7c6a102232bed6b31f73936f59b5541b1.
+
+Yocto currently does not handle flashing the images generated
+by binman.
+
+Revert to the previous method.
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ arch/arm/dts/imx8mm-evk-u-boot.dtsi           | 106 ------------------
+ arch/arm/mach-imx/imx8m/Kconfig               |   1 -
+ .../imx8mm_evk/imximage-8mm-lpddr4.cfg        |   9 --
+ configs/imx8mm_evk_defconfig                  |   4 +-
+ 4 files changed, 2 insertions(+), 118 deletions(-)
+ delete mode 100644 board/freescale/imx8mm_evk/imximage-8mm-lpddr4.cfg
+
+diff --git a/arch/arm/dts/imx8mm-evk-u-boot.dtsi b/arch/arm/dts/imx8mm-evk-u-boot.dtsi
+index f200afac9fc6..6b459831e74e 100644
+--- a/arch/arm/dts/imx8mm-evk-u-boot.dtsi
++++ b/arch/arm/dts/imx8mm-evk-u-boot.dtsi
+@@ -6,10 +6,6 @@
+ #include "imx8mm-u-boot.dtsi"
+ 
+ / {
+-	binman: binman {
+-		multiple-images;
+-	};
+-
+ 	wdt-reboot {
+ 		compatible = "wdt-reboot";
+ 		wdt = <&wdog1>;
+@@ -116,105 +112,3 @@
+ &wdog1 {
+ 	u-boot,dm-spl;
+ };
+-
+-&binman {
+-	 u-boot-spl-ddr {
+-		filename = "u-boot-spl-ddr.bin";
+-		pad-byte = <0xff>;
+-		align-size = <4>;
+-		align = <4>;
+-
+-		u-boot-spl {
+-			align-end = <4>;
+-		};
+-
+-		blob_1: blob-ext@1 {
+-			filename = "lpddr4_pmu_train_1d_imem.bin";
+-			size = <0x8000>;
+-		};
+-
+-		blob_2: blob-ext@2 {
+-			filename = "lpddr4_pmu_train_1d_dmem.bin";
+-			size = <0x4000>;
+-		};
+-
+-		blob_3: blob-ext@3 {
+-			filename = "lpddr4_pmu_train_2d_imem.bin";
+-			size = <0x8000>;
+-		};
+-
+-		blob_4: blob-ext@4 {
+-			filename = "lpddr4_pmu_train_2d_dmem.bin";
+-			size = <0x4000>;
+-		};
+-	};
+-
+-
+-       flash {
+-		mkimage {
+-			args = "-n spl/u-boot-spl.cfgout -T imx8mimage -e 0x7e1000";
+-
+-			blob {
+-				filename = "u-boot-spl-ddr.bin";
+-			};
+-		};
+-	};
+-
+-	itb {
+-		filename = "u-boot.itb";
+-
+-		fit {
+-			description = "Configuration to load ATF before U-Boot";
+-			#address-cells = <1>;
+-			fit,external-offset = <CONFIG_FIT_EXTERNAL_OFFSET>;
+-
+-			images {
+-				uboot {
+-					description = "U-Boot (64-bit)";
+-					type = "standalone";
+-					arch = "arm64";
+-					compression = "none";
+-					load = <CONFIG_SYS_TEXT_BASE>;
+-
+-					uboot_blob: blob-ext {
+-						filename = "u-boot-nodtb.bin";
+-					};
+-				};
+-
+-				atf {
+-					description = "ARM Trusted Firmware";
+-					type = "firmware";
+-					arch = "arm64";
+-					compression = "none";
+-					load = <0x920000>;
+-					entry = <0x920000>;
+-
+-					atf_blob: blob-ext {
+-						filename = "bl31.bin";
+-					};
+-				};
+-
+-				fdt {
+-					description = "NAME";
+-					type = "flat_dt";
+-					compression = "none";
+-
+-					uboot_fdt_blob: blob-ext {
+-						filename = "u-boot.dtb";
+-					};
+-				};
+-			};
+-
+-			configurations {
+-				default = "conf";
+-
+-				conf {
+-					description = "NAME";
+-					firmware = "uboot";
+-					loadables = "atf";
+-					fdt = "fdt";
+-				};
+-			};
+-		};
+-	};
+-};
+diff --git a/arch/arm/mach-imx/imx8m/Kconfig b/arch/arm/mach-imx/imx8m/Kconfig
+index 0669363c0f51..33db5f6e8d6b 100644
+--- a/arch/arm/mach-imx/imx8m/Kconfig
++++ b/arch/arm/mach-imx/imx8m/Kconfig
+@@ -46,7 +46,6 @@ config TARGET_IMX8MQ_PHANBELL
+ 
+ config TARGET_IMX8MM_EVK
+ 	bool "imx8mm LPDDR4 EVK board"
+-	select BINMAN
+ 	select IMX8MM
+ 	select SUPPORT_SPL
+ 	select IMX8M_LPDDR4
+diff --git a/board/freescale/imx8mm_evk/imximage-8mm-lpddr4.cfg b/board/freescale/imx8mm_evk/imximage-8mm-lpddr4.cfg
+deleted file mode 100644
+index b89092a5590b..000000000000
+--- a/board/freescale/imx8mm_evk/imximage-8mm-lpddr4.cfg
++++ /dev/null
+@@ -1,9 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0+ */
+-/*
+- * Copyright 2021 NXP
+- */
+-
+-#define __ASSEMBLY__
+-
+-BOOT_FROM	sd
+-LOADER		mkimage.flash.mkimage	0x7E1000
+diff --git a/configs/imx8mm_evk_defconfig b/configs/imx8mm_evk_defconfig
+index a06c6f9794ac..682909bdb953 100644
+--- a/configs/imx8mm_evk_defconfig
++++ b/configs/imx8mm_evk_defconfig
+@@ -22,9 +22,9 @@ CONFIG_DISTRO_DEFAULTS=y
+ CONFIG_FIT=y
+ CONFIG_FIT_EXTERNAL_OFFSET=0x3000
+ CONFIG_SPL_LOAD_FIT=y
+-# CONFIG_USE_SPL_FIT_GENERATOR is not set
++CONFIG_SPL_FIT_GENERATOR="arch/arm/mach-imx/mkimage_fit_atf.sh"
+ CONFIG_OF_SYSTEM_SETUP=y
+-CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/freescale/imx8mm_evk/imximage-8mm-lpddr4.cfg"
++CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=arch/arm/mach-imx/imx8m/imximage-8mm-lpddr4.cfg"
+ CONFIG_BOARD_LATE_INIT=y
+ CONFIG_SPL_BOARD_INIT=y
+ CONFIG_SPL_SEPARATE_BSS=y
+-- 
+2.25.1
+
