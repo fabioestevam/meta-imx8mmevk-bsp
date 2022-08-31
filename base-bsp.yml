@@ -1,0 +1,43 @@
+header:
+  version: 1
+distro: nodistro
+machine: imx8mmevk
+repos:
+  meta-phg-bsp:
+  poky:
+    url: "https://git.yoctoproject.org/git/poky"
+    refspec: "dunfell"
+    layers:
+      meta:
+      meta-poky:
+  meta-mainline-common:
+    url: "https://source.denx.de/denx/meta-mainline-common.git"
+    refspec: "dunfell-3.1"
+  meta-openembedded:
+    url: "https://git.openembedded.org/meta-openembedded"
+    refspec: "dunfell"
+    layers:
+      meta-oe:
+target: "core-image-minimal"
+
+local_conf_header:
+  package_ipk: |
+    PACKAGE_CLASSES ?= "package_rpm"
+  extra_image_features: |
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+  user_classes: |
+    USER_CLASSES ?= "buildstats image-prelink"
+  patchresolve: |
+    PATCHRESOLVE = "noop"
+  bb_diskmon_dirs: |
+    BB_DISKMON_DIRS ??= "\
+      STOPTASKS,${TMPDIR},1G,100K \
+      STOPTASKS,${DL_DIR},1G,100K \
+      STOPTASKS,${SSTATE_DIR},1G,100K \
+      STOPTASKS,/tmp,100M,100K \
+      ABORT,${TMPDIR},100M,1K \
+      ABORT,${DL_DIR},100M,1K \
+      ABORT,${SSTATE_DIR},100M,1K \
+      ABORT,/tmp,10M,1K"
+  conf_version: |
+    CONF_VERSION = "1"
