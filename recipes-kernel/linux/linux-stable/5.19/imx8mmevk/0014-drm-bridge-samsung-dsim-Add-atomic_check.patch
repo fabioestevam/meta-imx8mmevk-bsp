@@ -1,0 +1,82 @@
+From fc7089fb989fc039060d20c7b0875615f0bf56dc Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Wed, 20 Jul 2022 20:16:39 +0530
+Subject: [PATCH 14/28] drm: bridge: samsung-dsim: Add atomic_check
+
+Explicit fixing up of mode_flags is required for DSIM present
+in i.MX8M SoC.
+
+At least the LCDIF + DSIM needs active low sync polarities in
+order to correlate the correct sync flags of the surrounding
+components in the chain to make sure the whole pipeline can
+work properly.
+
+So, add DSIM_QUIRK_FIXUP_SYNC_POL to handle this fixup via bridge
+atomic_check.
+
+v3:
+* add DSIM_QUIRK_FIXUP_SYNC_POL to handle mode_flasg fixup
+
+v2:
+* none
+
+v1:
+* fix mode flags in atomic_check instead of mode_fixup
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/bridge/samsung-dsim.c | 18 ++++++++++++++++++
+ include/drm/bridge/samsung-dsim.h     |  1 +
+ 2 files changed, 19 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 5a0fea30e9e8..376e9682e130 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -1339,6 +1339,23 @@ static void samsung_dsim_atomic_post_disable(struct drm_bridge *bridge,
+ 	pm_runtime_put_sync(dsi->dev);
+ }
+ 
++static int samsung_dsim_atomic_check(struct drm_bridge *bridge,
++				     struct drm_bridge_state *bridge_state,
++				     struct drm_crtc_state *crtc_state,
++				     struct drm_connector_state *conn_state)
++{
++	struct samsung_dsim *dsi = bridge_to_dsi(bridge);
++	struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
++
++	if (dsi->driver_data->quirks & DSIM_QUIRK_FIXUP_SYNC_POL) {
++		/* At least LCDIF + DSIM needs active low sync */
++		adjusted_mode->flags |= (DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC);
++		adjusted_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
++	}
++
++	return 0;
++}
++
+ static void samsung_dsim_mode_set(struct drm_bridge *bridge,
+ 				  const struct drm_display_mode *mode,
+ 				  const struct drm_display_mode *adjusted_mode)
+@@ -1361,6 +1378,7 @@ static const struct drm_bridge_funcs samsung_dsim_bridge_funcs = {
+ 	.atomic_duplicate_state		= drm_atomic_helper_bridge_duplicate_state,
+ 	.atomic_destroy_state		= drm_atomic_helper_bridge_destroy_state,
+ 	.atomic_reset			= drm_atomic_helper_bridge_reset,
++	.atomic_check			= samsung_dsim_atomic_check,
+ 	.atomic_pre_enable		= samsung_dsim_atomic_pre_enable,
+ 	.atomic_enable			= samsung_dsim_atomic_enable,
+ 	.atomic_disable			= samsung_dsim_atomic_disable,
+diff --git a/include/drm/bridge/samsung-dsim.h b/include/drm/bridge/samsung-dsim.h
+index c852d7b9981e..4eacaf18e00a 100644
+--- a/include/drm/bridge/samsung-dsim.h
++++ b/include/drm/bridge/samsung-dsim.h
+@@ -35,6 +35,7 @@ struct samsung_dsim_transfer {
+ 
+ enum samsung_dsim_quirks {
+ 	DSIM_QUIRK_PLAT_DATA		= BIT(0),
++	DSIM_QUIRK_FIXUP_SYNC_POL	= BIT(1),
+ };
+ 
+ struct samsung_dsim_driver_data {
+-- 
+2.25.1
+

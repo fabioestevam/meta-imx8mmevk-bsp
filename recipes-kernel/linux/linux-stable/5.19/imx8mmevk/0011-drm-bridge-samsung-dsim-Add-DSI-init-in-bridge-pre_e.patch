@@ -1,0 +1,84 @@
+From ceb46d13df6f7c554f27c60d7fdcefe350f4e3f7 Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Thu, 7 Apr 2022 13:45:33 +0530
+Subject: [PATCH 11/28] drm: bridge: samsung-dsim: Add DSI init in bridge
+ pre_enable()
+
+Host transfer() in DSI master will invoke only when the DSI commands
+are sent from DSI devices like DSI Panel or DSI bridges and this
+host transfer wouldn't invoke for I2C-based-DSI bridge drivers.
+
+Handling DSI host initialization in transfer calls misses the
+controller setup for I2C configured DSI bridges.
+
+This patch adds the DSI initialization from transfer to bridge
+pre_enable as the bridge pre_enable API is invoked by core as
+it is common across all classes of DSI device drivers.
+
+v3:
+* none
+
+v2:
+* check initialized state in samsung_dsim_init
+
+v1:
+* keep DSI init in host transfer
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/bridge/samsung-dsim.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 9b74a3f98a17..b07909a52f2d 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -1258,6 +1258,9 @@ static int samsung_dsim_init(struct samsung_dsim *dsi)
+ {
+ 	const struct samsung_dsim_driver_data *driver_data = dsi->driver_data;
+ 
++	if (dsi->state & DSIM_STATE_INITIALIZED)
++		return 0;
++
+ 	samsung_dsim_reset(dsi);
+ 	samsung_dsim_enable_irq(dsi);
+ 
+@@ -1270,6 +1273,8 @@ static int samsung_dsim_init(struct samsung_dsim *dsi)
+ 	samsung_dsim_set_phy_ctrl(dsi);
+ 	samsung_dsim_init_link(dsi);
+ 
++	dsi->state |= DSIM_STATE_INITIALIZED;
++
+ 	return 0;
+ }
+ 
+@@ -1289,6 +1294,10 @@ static void samsung_dsim_atomic_pre_enable(struct drm_bridge *bridge,
+ 	}
+ 
+ 	dsi->state |= DSIM_STATE_ENABLED;
++
++	ret = samsung_dsim_init(dsi);
++	if (ret)
++		return;
+ }
+ 
+ static void samsung_dsim_atomic_enable(struct drm_bridge *bridge,
+@@ -1464,12 +1473,9 @@ static ssize_t samsung_dsim_host_transfer(struct mipi_dsi_host *host,
+ 	if (!(dsi->state & DSIM_STATE_ENABLED))
+ 		return -EINVAL;
+ 
+-	if (!(dsi->state & DSIM_STATE_INITIALIZED)) {
+-		ret = samsung_dsim_init(dsi);
+-		if (ret)
+-			return ret;
+-		dsi->state |= DSIM_STATE_INITIALIZED;
+-	}
++	ret = samsung_dsim_init(dsi);
++	if (ret)
++		return ret;
+ 
+ 	ret = mipi_dsi_create_packet(&xfer.packet, msg);
+ 	if (ret < 0)
+-- 
+2.25.1
+

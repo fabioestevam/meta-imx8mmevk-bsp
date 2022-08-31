@@ -1,0 +1,55 @@
+From 7fb754ff36a10fe358995c14f8667df710360257 Mon Sep 17 00:00:00 2001
+From: Robert Chiras <robert.chiras@nxp.com>
+Date: Fri, 24 Nov 2017 14:04:24 +0200
+Subject: [PATCH 21/28] MLK-16986-4 drm/bridge: adv7511: set bus_flags and
+ bus_format
+
+For a proper initialization of the crtc driving the connector for this
+bridge, we need to set the bus_formats and bus_flags of the connector's
+display_info.
+
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Reviewed-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 6baec5e5168b..b78243c00039 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -16,6 +16,7 @@
+ 
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_connector.h>
+ #include <drm/drm_edid.h>
+ #include <drm/drm_print.h>
+ #include <drm/drm_probe_helper.h>
+@@ -659,6 +660,8 @@ static int adv7511_get_modes(struct adv7511 *adv7511,
+ {
+ 	struct edid *edid;
+ 	unsigned int count;
++	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
++	int ret;
+ 
+ 	edid = adv7511_get_edid(adv7511, connector);
+ 
+@@ -667,6 +670,14 @@ static int adv7511_get_modes(struct adv7511 *adv7511,
+ 
+ 	kfree(edid);
+ 
++	connector->display_info.bus_flags = DRM_BUS_FLAG_DE_LOW |
++					    DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE;
++
++	ret = drm_display_info_set_bus_formats(&connector->display_info,
++					       &bus_format, 1);
++	if (ret)
++		return ret;
++
+ 	return count;
+ }
+ 
+-- 
+2.25.1
+

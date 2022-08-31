@@ -1,0 +1,37 @@
+From f9ecb1de3e548d8897d6baaac3c961c83ae609ec Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@denx.de>
+Date: Mon, 1 Aug 2022 16:05:23 -0300
+Subject: [PATCH 27/28] arm64: dts: imx8mm-evk: Remove PCI support
+
+The old imx8mm-evk version has a different PCI clock circuitry.
+
+Remove PCI support to avoid board hang while booting.
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+index c7c58d3f9774..1e387a66fb64 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
+@@ -402,7 +402,6 @@ &pcie_phy {
+ 	fsl,tx-deemph-gen1 = <0x2d>;
+ 	fsl,tx-deemph-gen2 = <0xf>;
+ 	clocks = <&pcie0_refclk>;
+-	status = "okay";
+ };
+ 
+ &pcie0 {
+@@ -418,7 +417,6 @@ &pcie0 {
+ 	assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_50M>,
+ 				 <&clk IMX8MM_SYS_PLL2_250M>;
+ 	vpcie-supply = <&reg_pcie0>;
+-	status = "okay";
+ };
+ 
+ &sai3 {
+-- 
+2.25.1
+

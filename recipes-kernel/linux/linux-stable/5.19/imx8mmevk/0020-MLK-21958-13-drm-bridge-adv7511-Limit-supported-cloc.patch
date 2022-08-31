@@ -1,0 +1,72 @@
+From fd77f6455088891bf0c7389a38bff2ce59c4d7f5 Mon Sep 17 00:00:00 2001
+From: Robert Chiras <robert.chiras@nxp.com>
+Date: Fri, 7 Jun 2019 10:11:23 +0300
+Subject: [PATCH 20/28] MLK-21958-13: drm/bridge: adv7511: Limit supported
+ clocks
+
+Some modes are not working with this converter. Until we find a real fix
+to make any mode working, just limit the supported modes by their
+clocks.
+
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+Reviewed-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 32 ++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index 6031bdd92342..6baec5e5168b 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -74,6 +74,26 @@ static const uint8_t adv7511_register_defaults[] = {
+ 	0x00, 0x7c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ };
+ 
++/*
++ * TODO: Currently, filter-out unsupported modes by their clocks.
++ * Need to find a better way to do this.
++ * These are the pixel clocks that the converter can handle successfully.
++ */
++
++static const int valid_clocks[] = {
++	148500,
++	135000,
++	132000,
++	119000,
++	108000,
++	78750,
++	74250,
++	65000,
++	49500,
++	40000,
++	31500,
++};
++
+ static bool adv7511_register_volatile(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+@@ -699,9 +719,21 @@ adv7511_detect(struct adv7511 *adv7511, struct drm_connector *connector)
+ static enum drm_mode_status adv7511_mode_valid(struct adv7511 *adv7511,
+ 			      struct drm_display_mode *mode)
+ {
++	size_t i, num_modes = ARRAY_SIZE(valid_clocks);
++	bool clock_ok = false;
++
+ 	if (mode->clock > 165000)
+ 		return MODE_CLOCK_HIGH;
+ 
++	for (i = 0; i < num_modes; i++)
++		if (mode->clock == valid_clocks[i]) {
++			clock_ok = true;
++			break;
++		}
++
++	if (!clock_ok)
++		return MODE_NOCLOCK;
++
+ 	return MODE_OK;
+ }
+ 
+-- 
+2.25.1
+
