@@ -70,9 +70,6 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	kernel-modules kernel-devicetree \
 	u-boot-default-env \
 	imx-firmware-sdma-imx7d \
-	kernel-module-iwlwifi \
-	linux-firmware-iwlwifi \
-	linux-firmware-ibt \
 	"
 
 # List of images to be built
