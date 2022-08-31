@@ -73,7 +73,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 	"
 
 # List of images to be built
-IMAGE_FSTYPES ?= "wic.gz wic.xz ext4.gz"
+IMAGE_FSTYPES ?= "wic.gz wic.xz ext4.gz wic.bmap"
 INITRAMFS_FSTYPES ?= "cpio.xz"
 
 EXTRA_IMAGEDEPENDS += "virtual/bootloader"
