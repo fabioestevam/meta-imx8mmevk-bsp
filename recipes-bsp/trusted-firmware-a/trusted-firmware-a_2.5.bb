@@ -1,22 +1,14 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-#
-# Trusted firmware-A 2.5
-#
-SRC_URI = "git://github.com/ARM-software/arm-trusted-firmware.git;protocol=https;name=tfa"
+PV .= "+git${SRCPV}"
 
-# Use TF-A for version
-SRCREV_FORMAT = "tfa"
-
-# TF-A v2.5
-SRCREV_tfa = "c158878249f1bd930906ebd744b90d3f2a8265f1"
+SRCBRANCH = "lf_v2.4"
+SRC_URI = "git://source.codeaurora.org/external/imx/imx-atf.git;protocol=https;branch=${SRCBRANCH}"
+SRCREV = "05f788b9bbb13d002997e35008a4b945f7e2957b"
 
 S = "${WORKDIR}/git"
 
-LIC_FILES_CHKSUM = "file://license.rst;md5=1dd070c98a281d18d9eefd938729b031"
-
-SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
-SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
+LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/BSD-3-Clause;md5=550794465ba0ec5312d6919e203a55f9"
 
 #
 # mbed TLS source
