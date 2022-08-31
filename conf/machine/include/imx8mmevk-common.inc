@@ -59,8 +59,7 @@ KERNEL_MODULE_AUTOLOAD += " \
 	"
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-stable"
-PREFERRED_VERSION_linux-stable ?= "5.10%"
-PREFERRED_VERSION_linux-yocto ?= "5.10%"
+PREFERRED_VERSION_linux-stable ?= "5.19%"
 
 KERNEL_DEVICETREE = " \
 	freescale/imx8mm-evk.dtb \
