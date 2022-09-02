@@ -1,0 +1,30 @@
+From c20f2995980262bb61d07d9fa78bed1a5400fe4e Mon Sep 17 00:00:00 2001
+From: Fabio Estevam <festevam@denx.de>
+Date: Fri, 2 Sep 2022 13:48:17 -0300
+Subject: [PATCH 1/2] imx8mm-evk: Adjust boot environment
+
+imx8mm-evk uses distro boot mechanism.
+
+Use a simpler 'bootcmd' and 'bootargs'approach.
+
+Signed-off-by: Fabio Estevam <festevam@denx.de>
+---
+ include/configs/imx8mm_evk.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/configs/imx8mm_evk.h b/include/configs/imx8mm_evk.h
+index 5e8f19c43f..c4012444b0 100644
+--- a/include/configs/imx8mm_evk.h
++++ b/include/configs/imx8mm_evk.h
+@@ -53,6 +53,8 @@
+ 	"bootm_size=0x10000000\0" \
+ 	"mmcpart=1\0" \
+ 	"mmcroot=/dev/mmcblk1p2 rootwait rw\0" \
++	"mmcargs=setenv bootargs root=/dev/mmcblk1p${mmcpart} rw rootwait\0" \
++	"bootcmd=run mmcargs; mmc dev 1; load mmc 1:${mmcpart} ${loadaddr}  boot/Image;load mmc 1:${mmcpart} ${fdt_addr_r}  boot/imx8mm-evk.dtb; booti ${loadaddr} - ${fdt_addr_r}\0" \
+ 
+ /* Link Definitions */
+ 
+-- 
+2.25.1
+

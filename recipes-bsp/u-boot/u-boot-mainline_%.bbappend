@@ -5,9 +5,8 @@ RPROVIDES_${PN} = "virtual/bootloader"
 DEPENDS_append_imx8mmevk = "u-boot-mainline-tools-native"
 
 SRC_URI_append_imx8mmevk = " \
-	file://0001-Revert-imx8mm_evk-switch-to-use-binman-to-pack-image.patch \
-	file://0002-imx8mm-evk-Adjust-boot-environment.patch \
-	file://0003-imx8mm_evk-Add-redundand-environment-support.patch \
+	file://0001-imx8mm-evk-Adjust-boot-environment.patch \
+	file://0002-mx8mm_evk-Add-redundand-environment-support.patch \
 	"
 EXTRA_OEMAKE_append_imx8mmevk = " ATF_LOAD_ADDR=0x920000 "
 
