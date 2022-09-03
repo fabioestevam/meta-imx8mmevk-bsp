@@ -43,7 +43,7 @@ be referenced in bblayers.conf in this order:
 BBLAYERS ?= " \
   /path/to/OE/poky/meta \
   /path/to/OE/meta-mainline-common \
-  /path/to/OE/meta-iot-imx8mmevk \
+  /path/to/OE/meta-imx8mmevk-bsp \
   "
 ```
 

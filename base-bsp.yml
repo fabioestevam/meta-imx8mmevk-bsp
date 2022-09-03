@@ -3,7 +3,7 @@ header:
 distro: nodistro
 machine: imx8mmevk
 repos:
-  meta-phg-bsp:
+  meta-imx8mmevk-bsp:
   poky:
     url: "https://git.yoctoproject.org/git/poky"
     refspec: "kirkstone"
