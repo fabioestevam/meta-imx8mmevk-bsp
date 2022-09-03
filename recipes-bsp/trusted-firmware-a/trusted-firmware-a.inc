@@ -35,7 +35,7 @@ SRC_URI += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI_MBEDTLS}', '', d
 # add mbed TLS chksum
 LIC_FILES_CHKSUM += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
 # add mbed TLS to version
-SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
+SRCREV_FORMAT:append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
 
 # U-boot support (set TFA_UBOOT to 1 to activate)
 # When U-Boot support is activated BL33 is activated with u-boot.bin file
@@ -65,7 +65,7 @@ do_configure[noexec] = "1"
 
 # We need dtc for dtbs compilation
 # We need openssl for fiptool
-DEPENDS_append = " dtc-native openssl-native"
+DEPENDS:append = " dtc-native openssl-native"
 
 # Add platform parameter
 EXTRA_OEMAKE += "PLAT=${TFA_PLATFORM}"

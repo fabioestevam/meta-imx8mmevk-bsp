@@ -1,4 +1,4 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 PV .= "+git${SRCPV}"
 
@@ -36,7 +36,7 @@ require trusted-firmware-a.inc
 # To properly use the native toolchain of yocto and the right libraries we need
 # to pass the proper flags to gcc. This is achieved here by creating a gcc
 # script to force passing to gcc the right CFLAGS and LDFLAGS
-do_compile_prepend() {
+do_compile:prepend() {
     #Create an host gcc build parser to ensure the proper include path is used
     mkdir -p bin
     echo "#!/usr/bin/env bash" > bin/gcc

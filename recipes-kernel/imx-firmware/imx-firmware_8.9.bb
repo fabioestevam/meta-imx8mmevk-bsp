@@ -43,19 +43,19 @@ addtask deploy after do_install before do_build
 
 NO_GENERIC_LICENSE[Firmware-nxp-imx-firmware] = "firmware-imx-${PV}/COPYING"
 
-LICENSE_${PN}-nxp-imx-license = "Firmware-nxp-imx-firmware"
-FILES_${PN}-nxp-imx-license = "${nonarch_base_libdir}/firmware/imx/COPYING"
+LICENSE:${PN}-nxp-imx-license = "Firmware-nxp-imx-firmware"
+FILES:${PN}-nxp-imx-license = "${nonarch_base_libdir}/firmware/imx/COPYING"
 
-ALLOW_EMPTY_${PN} = "1"
+ALLOW_EMPTY:${PN} = "1"
 PACKAGES = " \
 	${PN}-nxp-imx-license \
 	${PN}-sdma-imx6q ${PN}-sdma-imx7d \
 	"
 
-FILES_${PN}-sdma-imx6q = " ${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx6q.bin "
-LICENSE_${PN}-sdma-imx6q = "Firmware-nxp-imx-firmware"
-RDEPENDS_${PN}-sdma-imx6q += "${PN}-nxp-imx-license"
+FILES:${PN}-sdma-imx6q = " ${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx6q.bin "
+LICENSE:${PN}-sdma-imx6q = "Firmware-nxp-imx-firmware"
+RDEPENDS:${PN}-sdma-imx6q += "${PN}-nxp-imx-license"
 
-FILES_${PN}-sdma-imx7d = " ${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx7d.bin "
-LICENSE_${PN}-sdma-imx7d = "Firmware-nxp-imx-firmware"
-RDEPENDS_${PN}-sdma-imx7d += "${PN}-nxp-imx-license"
+FILES:${PN}-sdma-imx7d = " ${nonarch_base_libdir}/firmware/imx/sdma/sdma-imx7d.bin "
+LICENSE:${PN}-sdma-imx7d = "Firmware-nxp-imx-firmware"
+RDEPENDS:${PN}-sdma-imx7d += "${PN}-nxp-imx-license"
