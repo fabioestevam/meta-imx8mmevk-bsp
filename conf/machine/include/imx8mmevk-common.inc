@@ -8,7 +8,7 @@ SOC_FAMILY ?= "imx8mm"
 
 MACHINEOVERRIDES =. "mx8:mx8m:mx8mm:"
 
-require conf/machine/include/tune-cortexa53.inc
+require conf/machine/include/arm/armv8a/tune-cortexa53.inc
 require conf/machine/include/soc-family.inc
 
 MACHINE_FEATURES ?= "apm alsa ext2 keyboard screen serial touchscreen usbhost wifi bluetooth"
