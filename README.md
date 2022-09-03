@@ -9,7 +9,7 @@ Dependencies
 This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
-  - branch: dunfell
+  - branch: kirkstone
   - layers: meta
 
 * URI: https://source.denx.de/denx/meta-mainline-common.git
@@ -29,8 +29,8 @@ below shall be checked out. The examples below will use /path/to/OE/ as a
 location of the metalayers.
 
 * https://source.denx.de/denx/meta-mainline-common.git	(branch: dunfell-3.1)
-* https://github.com/fabioestevam/meta-imx8mmevk-bsp.git	(branch: dunfell)
-* git://git.yoctoproject.org/poky				(branch: dunfell)
+* https://github.com/fabioestevam/meta-imx8mmevk-bsp.git	(branch: kirkstone)
+* git://git.yoctoproject.org/poky				(branch: kirkstone)
 
 With all the source artifacts in place, proceed with setting up the build
 using oe-init-build-env as specified in the Yocto Project wiki:
