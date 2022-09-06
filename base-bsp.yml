@@ -18,7 +18,7 @@ repos:
     refspec: "kirkstone"
     layers:
       meta-oe:
-target: "core-image-minimal"
+target: "core-image-base"
 
 local_conf_header:
   package_ipk: |
