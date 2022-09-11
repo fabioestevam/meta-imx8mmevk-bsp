@@ -52,6 +52,9 @@ PREFERRED_PROVIDER_drm ??= "${@'libdrm-mainline' if (d.getVar('LAYERSERIES_COREN
 PREFERRED_PROVIDER_libdrm ??= "${@'libdrm-mainline' if (d.getVar('LAYERSERIES_CORENAMES') in ["dunfell"]) else 'libdrm'}"
 PREFERRED_PROVIDER_wayland-protocols ??= "${@'wayland-protocols-mainline' if (d.getVar('LAYERSERIES_CORENAMES') in ["dunfell"]) else 'wayland-protocols'}"
 
+# Swupdate
+PREFERRED_VERSION_swupdate = "2022.05"
+
 # Linux kernel
 KERNEL_IMAGETYPE = "Image"
 FIT_KERNEL_COMP_ALG = "lzo"
