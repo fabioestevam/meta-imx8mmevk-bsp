@@ -59,21 +59,6 @@ PREFERRED_VERSION_swupdate = "2022.05"
 KERNEL_IMAGETYPE = "Image"
 FIT_KERNEL_COMP_ALG = "lzo"
 FIT_KERNEL_COMP_ALG_EXTENSION = ".lzo"
-KERNEL_MODULE_AUTOLOAD += " \
-	ci_hdrc \
-	ci_hdrc_imx \
-	edt-ft5x06 \
-	ehci_hcd \
-	ehci_mxc \
-	i2c_imx \
-	uinput \
-	usbcore \
-	usbmisc_imx \
-	usb_phy_generic \
-	usb_storage \
-	cfg80211 \
-	iwlwifi \
-	"
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-stable"
 PREFERRED_VERSION_linux-stable ?= "5.19%"
