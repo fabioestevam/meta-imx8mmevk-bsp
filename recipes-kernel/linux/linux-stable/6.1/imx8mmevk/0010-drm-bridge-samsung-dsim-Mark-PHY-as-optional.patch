@@ -1,0 +1,41 @@
+From c32c9ca6108ae3b7d69af9292c53315f37734e5c Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Thu, 7 Apr 2022 13:44:31 +0530
+Subject: [PATCH 10/28] drm: bridge: samsung-dsim: Mark PHY as optional
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+In i.MX8M Mini/Nano SoC the DSI Phy requires a MIPI DPHY bit
+to reset in order to activate the PHY and that can be done via
+upstream i.MX8M blk-ctrl driver.
+
+So, mark the phy get as optional.
+
+v3, v2:
+* none
+
+v1:
+* new patch
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/bridge/samsung-dsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 4d5f72de2240..9b74a3f98a17 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -1583,7 +1583,7 @@ static int samsung_dsim_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dsi->reg_base))
+ 		return PTR_ERR(dsi->reg_base);
+ 
+-	dsi->phy = devm_phy_get(dev, "dsim");
++	dsi->phy = devm_phy_optional_get(dev, "dsim");
+ 	if (IS_ERR(dsi->phy)) {
+ 		dev_info(dev, "failed to get dsim phy\n");
+ 		return PTR_ERR(dsi->phy);
+-- 
+2.25.1
+

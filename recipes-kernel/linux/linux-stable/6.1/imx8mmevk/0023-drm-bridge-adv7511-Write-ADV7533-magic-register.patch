@@ -1,0 +1,28 @@
+From 66003a8ca4418fa700277df97182ca2f5a1b9053 Mon Sep 17 00:00:00 2001
+From: Marek Vasut <marex@denx.de>
+Date: Thu, 15 Apr 2021 19:16:30 +0200
+Subject: [PATCH 23/28] drm/bridge: adv7511: Write ADV7533 magic register
+
+Write some sort of undocumented magic register of the ADV7533 to make it work.
+
+Signed-off-by: Marek Vasut <marex@denx.de>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7533.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7533.c b/drivers/gpu/drm/bridge/adv7511/adv7533.c
+index 67076be8e988..e306e8c5b0f7 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7533.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7533.c
+@@ -83,6 +83,8 @@ void adv7533_dsi_power_on(struct adv7511 *adv)
+ 		regmap_write(adv->regmap_cec, 0x27, 0x0b);
+ 	}
+ 
++	regmap_write(adv->regmap, 0x49, 0x00);
++
+ 	/* enable hdmi */
+ 	regmap_write(adv->regmap_cec, 0x03, 0x89);
+ 	/* disable test mode */
+-- 
+2.25.1
+

@@ -1,0 +1,69 @@
+From a5bc9696052c04cdf4965977ef37de09d2071710 Mon Sep 17 00:00:00 2001
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
+Date: Thu, 10 Dec 2020 14:22:26 +0100
+Subject: [PATCH 24/28] drm/exynos: Fix horizontal timing settings in
+ MHPORCH/MSYNC registers
+
+This is taken from the downstream driver at [1]. It's not clear if this
+is a valid and appropriate fix, but without it our DPI display connected
+through a Toshiba DSI-DPI bridge doesn't sync properly.
+
+[1] https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/gpu/drm/bridge/sec-dsim.c?h=imx_5.4.47_2.2.0#n932
+
+Upstream-Status: Inappropriate [Downstream https://source.codeaurora.org/external/imx/linux-imx/tree/drivers/gpu/drm/bridge/sec-dsim.c?h=imx_5.4.47_2.2.0#n932]
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+---
+ drivers/gpu/drm/bridge/samsung-dsim.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 3b859b61f493..ba129b620e77 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -199,6 +199,7 @@
+ #define DSI_RX_FIFO_SIZE		256
+ #define DSI_XFER_TIMEOUT_MS		100
+ #define DSI_RX_FIFO_EMPTY		0x30800002
++#define DSI_HSYNC_PKT_OVERHEAD	6
+ 
+ #define OLD_SCLK_MIPI_CLK_NAME		"pll_clk"
+ 
+@@ -875,20 +876,31 @@ static void samsung_dsim_set_display_mode(struct samsung_dsim *dsi)
+ {
+ 	struct drm_display_mode *m = &dsi->mode;
+ 	unsigned int num_bits_resol = dsi->driver_data->num_bits_resol;
+-	u32 reg;
++	int bpp;
++	u32 reg, hfp, hbp, hsa;
+ 
+ 	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
++		bpp = mipi_dsi_pixel_format_to_bpp(dsi->format) / 8;
++
+ 		reg = DSIM_CMD_ALLOW(0xf)
+ 			| DSIM_STABLE_VFP(m->vsync_start - m->vdisplay)
+ 			| DSIM_MAIN_VBP(m->vtotal - m->vsync_end);
+ 		samsung_dsim_write(dsi, DSIM_MVPORCH_REG, reg);
+ 
+-		reg = DSIM_MAIN_HFP(m->hsync_start - m->hdisplay)
+-			| DSIM_MAIN_HBP(m->htotal - m->hsync_end);
++		hfp = DIV_ROUND_UP((m->hsync_start - m->hdisplay) * bpp, dsi->lanes);
++		hfp -= (hfp > DSI_HSYNC_PKT_OVERHEAD) ? DSI_HSYNC_PKT_OVERHEAD : 0;
++
++		hbp = DIV_ROUND_UP((m->htotal - m->hsync_end) * bpp, dsi->lanes);
++		hbp -= (hbp > DSI_HSYNC_PKT_OVERHEAD) ? DSI_HSYNC_PKT_OVERHEAD : 0;
++
++		hsa = DIV_ROUND_UP((m->hsync_end - m->hsync_start) * bpp, dsi->lanes);
++		hsa -= (hsa > DSI_HSYNC_PKT_OVERHEAD) ? DSI_HSYNC_PKT_OVERHEAD : 0;
++
++		reg = DSIM_MAIN_HFP(hfp) | DSIM_MAIN_HBP(hbp);
+ 		samsung_dsim_write(dsi, DSIM_MHPORCH_REG, reg);
+ 
+ 		reg = DSIM_MAIN_VSA(m->vsync_end - m->vsync_start)
+-			| DSIM_MAIN_HSA(m->hsync_end - m->hsync_start);
++			| DSIM_MAIN_HSA(hsa);
+ 		samsung_dsim_write(dsi, DSIM_MSYNC_REG, reg);
+ 	}
+ 	reg =  DSIM_MAIN_HRESOL(m->hdisplay, num_bits_resol) |
+-- 
+2.25.1
+

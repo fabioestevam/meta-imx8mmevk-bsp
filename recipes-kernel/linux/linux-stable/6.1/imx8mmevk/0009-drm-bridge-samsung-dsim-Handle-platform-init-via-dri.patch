@@ -1,0 +1,134 @@
+From c4b63bf70853fa51eda4615a9f321d15b12e3f73 Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Tue, 19 Jul 2022 17:26:39 +0530
+Subject: [PATCH 09/28] drm: bridge: samsung-dsim: Handle platform init via
+ driver_data
+
+In order to make a common Samsung DSIM bridge driver some platform
+specific glue code needs to maintain separately as it is hard to
+maintain platform specific glue and conventional component_ops on
+the drm bridge drivers side.
+
+This patch is trying to support that glue code initialization based
+on the DSIM_QUIRK_PLAT_DATA set from respective driver_data.
+
+So, the platforms which enable DSIM_QUIRK_PLAT_DATA flags will handle
+all platform specific initialization via samsung_dsim_plat_probe.
+
+The platform probe is responsible to
+- initialize samsung_dsim_plat_data and install hooks
+- initialize component_ops
+- preserve samsung_dsim structure pointer
+
+v3:
+* update samsung_dsim_plat_probe return value
+* add plat_data quirk to handle platform init
+
+v2:
+* fix samsung_dsim_plat_probe return pointer
+
+v1:
+* use platform_init instead of exynos_specific
+* handle component_ops in glue code
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/bridge/samsung-dsim.c | 16 ++++++++++++++--
+ include/drm/bridge/samsung-dsim.h     |  5 +++++
+ 2 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
+index 20db345abf8b..4d5f72de2240 100644
+--- a/drivers/gpu/drm/bridge/samsung-dsim.c
++++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+@@ -369,6 +369,7 @@ static const struct samsung_dsim_driver_data exynos3_dsi_driver_data = {
+ 	.wait_for_reset = 1,
+ 	.num_bits_resol = 11,
+ 	.reg_values = reg_values,
++	.quirks = DSIM_QUIRK_PLAT_DATA,
+ };
+ 
+ static const struct samsung_dsim_driver_data exynos4_dsi_driver_data = {
+@@ -381,6 +382,7 @@ static const struct samsung_dsim_driver_data exynos4_dsi_driver_data = {
+ 	.wait_for_reset = 1,
+ 	.num_bits_resol = 11,
+ 	.reg_values = reg_values,
++	.quirks = DSIM_QUIRK_PLAT_DATA,
+ };
+ 
+ static const struct samsung_dsim_driver_data exynos5_dsi_driver_data = {
+@@ -391,6 +393,7 @@ static const struct samsung_dsim_driver_data exynos5_dsi_driver_data = {
+ 	.wait_for_reset = 1,
+ 	.num_bits_resol = 11,
+ 	.reg_values = reg_values,
++	.quirks = DSIM_QUIRK_PLAT_DATA,
+ };
+ 
+ static const struct samsung_dsim_driver_data exynos5433_dsi_driver_data = {
+@@ -402,6 +405,7 @@ static const struct samsung_dsim_driver_data exynos5433_dsi_driver_data = {
+ 	.wait_for_reset = 0,
+ 	.num_bits_resol = 12,
+ 	.reg_values = exynos5433_reg_values,
++	.quirks = DSIM_QUIRK_PLAT_DATA,
+ };
+ 
+ static const struct samsung_dsim_driver_data exynos5422_dsi_driver_data = {
+@@ -413,6 +417,7 @@ static const struct samsung_dsim_driver_data exynos5422_dsi_driver_data = {
+ 	.wait_for_reset = 1,
+ 	.num_bits_resol = 12,
+ 	.reg_values = exynos5422_reg_values,
++	.quirks = DSIM_QUIRK_PLAT_DATA,
+ };
+ 
+ static const struct of_device_id samsung_dsim_of_match[] = {
+@@ -1609,7 +1614,11 @@ static int samsung_dsim_probe(struct platform_device *pdev)
+ 	dsi->bridge.of_node = dev->of_node;
+ 	dsi->bridge.type = DRM_MODE_CONNECTOR_DSI;
+ 
+-	ret = samsung_dsim_plat_probe(dsi);
++	if (dsi->driver_data->quirks & DSIM_QUIRK_PLAT_DATA)
++		ret = samsung_dsim_plat_probe(dsi);
++	else
++		ret = mipi_dsi_host_register(&dsi->dsi_host);
++
+ 	if (ret)
+ 		goto err_disable_runtime;
+ 
+@@ -1627,7 +1636,10 @@ static int samsung_dsim_remove(struct platform_device *pdev)
+ 
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	samsung_dsim_plat_remove(dsi);
++	if (dsi->driver_data->quirks & DSIM_QUIRK_PLAT_DATA)
++		samsung_dsim_plat_remove(dsi);
++	else
++		mipi_dsi_host_unregister(&dsi->dsi_host);
+ 
+ 	return 0;
+ }
+diff --git a/include/drm/bridge/samsung-dsim.h b/include/drm/bridge/samsung-dsim.h
+index 2e245bffd1b6..97fdee5ef5df 100644
+--- a/include/drm/bridge/samsung-dsim.h
++++ b/include/drm/bridge/samsung-dsim.h
+@@ -33,6 +33,10 @@ struct samsung_dsim_transfer {
+ 	u16 rx_done;
+ };
+ 
++enum samsung_dsim_quirks {
++	DSIM_QUIRK_PLAT_DATA		= BIT(0),
++};
++
+ struct samsung_dsim_driver_data {
+ 	const unsigned int *reg_ofs;
+ 	unsigned int plltmr_reg;
+@@ -43,6 +47,7 @@ struct samsung_dsim_driver_data {
+ 	unsigned int wait_for_reset;
+ 	unsigned int num_bits_resol;
+ 	const unsigned int *reg_values;
++	enum samsung_dsim_quirks quirks;
+ };
+ 
+ struct samsung_dsim_host_ops {
+-- 
+2.25.1
+

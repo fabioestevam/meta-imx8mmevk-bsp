@@ -61,7 +61,7 @@ FIT_KERNEL_COMP_ALG = "lzo"
 FIT_KERNEL_COMP_ALG_EXTENSION = ".lzo"
 
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-stable"
-PREFERRED_VERSION_linux-stable ?= "5.19%"
+PREFERRED_VERSION_linux-stable ?= "6.1%"
 
 KERNEL_DEVICETREE = " \
 	freescale/imx8mm-evk.dtb \

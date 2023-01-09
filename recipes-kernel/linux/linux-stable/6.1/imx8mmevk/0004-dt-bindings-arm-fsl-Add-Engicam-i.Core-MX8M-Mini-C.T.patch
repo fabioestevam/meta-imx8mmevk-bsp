@@ -1,0 +1,39 @@
+From d479c0a0314db4957af6e1bf2ed50316e4228a5d Mon Sep 17 00:00:00 2001
+From: Jagan Teki <jagan@amarulasolutions.com>
+Date: Wed, 10 Nov 2021 17:54:42 +0530
+Subject: [PATCH 04/28] dt-bindings: arm: fsl: Add Engicam i.Core MX8M Mini
+ C.TOUCH 2.0 10.1" OF
+
+i.Core MX8M Mini is an EDIMM SoM based on NXP i.MX8M Mini from Engicam.
+
+C.TOUCH 2.0 is a general purpose carrier board with capacitive
+touch interface support.
+
+10.1" OF is a capacitive touch 10.1" Open Frame panel solutions.
+
+i.Core MX8M Mini needs to mount on top of this Carrier board with
+pluged 10.1" OF for creating complete i.Core MX8M Mini C.TOUCH 2.0 10.1"
+Open Frame board.
+
+Add bindings for it.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index ef524378d449..e880e2e59470 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -837,6 +837,7 @@ properties:
+         items:
+           - enum:
+               - engicam,icore-mx8mm-ctouch2        # i.MX8MM Engicam i.Core MX8M Mini C.TOUCH 2.0
++              - engicam,icore-mx8mm-ctouch2-of10   # i.MX8MM Engicam i.Core MX8M Mini C.TOUCH 2.0 10.1" Open Frame
+               - engicam,icore-mx8mm-edimm2.2       # i.MX8MM Engicam i.Core MX8M Mini EDIMM2.2 Starter Kit
+           - const: engicam,icore-mx8mm             # i.MX8MM Engicam i.Core MX8M Mini SoM
+           - const: fsl,imx8mm
+-- 
+2.25.1
+
