@@ -6,6 +6,7 @@ DEPENDS:append:imx8mmevk = "u-boot-mainline-tools-native"
 SRC_URI:append:imx8mmevk = " \
 	file://0001-imx8mm-evk-Adjust-boot-environment.patch \
 	file://0002-mx8mm_evk-Add-redundand-environment-support.patch \
+        file://0003-u-boot-initial-env-rework-make-target.patch \
 	file://fw_env.config \
 	"
 EXTRA_OEMAKE:append:imx8mmevk = " ATF_LOAD_ADDR=0x920000 "
