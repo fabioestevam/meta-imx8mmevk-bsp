@@ -2,9 +2,9 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 PV .= "+git${SRCPV}"
 
-SRCBRANCH = "lf_v2.4"
-SRC_URI = "git://source.codeaurora.org/external/imx/imx-atf.git;protocol=https;branch=${SRCBRANCH}"
-SRCREV = "05f788b9bbb13d002997e35008a4b945f7e2957b"
+SRCBRANCH = "lf_v2.6"
+SRC_URI = "git://github.com/nxp-imx/imx-atf.git;protocol=https;branch=${SRCBRANCH}"
+SRCREV = "3c1583ba0a5d11e5116332e91065cb3740153a46"
 
 S = "${WORKDIR}/git"
 
