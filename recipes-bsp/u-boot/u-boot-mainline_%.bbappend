@@ -12,7 +12,7 @@ SRC_URI:append:imx8mmevk = " \
 EXTRA_OEMAKE:append:imx8mmevk = " ATF_LOAD_ADDR=0x920000 "
 
 # This is needed by binman during U-Boot build
-DEPENDS:append:imx8mmevk = " python3-setuptools-native "
+DEPENDS:append:imx8mmevk = " python3-setuptools-native imx-firmware trusted-firmware-a "
 
 do_compile[depends] += "${@'imx-firmware:do_deploy trusted-firmware-a:do_deploy' if ('imx8mmevk' in d.getVar('MACHINEOVERRIDES', True).split(':')) else ' '}"
 
