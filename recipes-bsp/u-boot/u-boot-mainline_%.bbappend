@@ -3,11 +3,13 @@ RPROVIDES:${PN} = "virtual/bootloader"
 
 DEPENDS:append:imx8mmevk = "u-boot-mainline-tools-native"
 
+# Bump to post-2023.01 to fix LTO build error
+SRCREV = "7b84c973b96775576dcff228d865e8570be26c82"
+
 SRC_URI:append:imx8mmevk = " \
-	file://0001-imx8mm-evk-Adjust-boot-environment.patch \
-	file://0002-mx8mm_evk-Add-redundand-environment-support.patch \
-        file://0003-u-boot-initial-env-rework-make-target.patch \
-	file://fw_env.config \
+        file://0001-imx8mm-evk-Adjust-boot-environment.patch \
+        file://0002-mx8mm_evk-Add-redundand-environment-support.patch \
+        file://fw_env.config \
 	"
 EXTRA_OEMAKE:append:imx8mmevk = " ATF_LOAD_ADDR=0x920000 "
 
