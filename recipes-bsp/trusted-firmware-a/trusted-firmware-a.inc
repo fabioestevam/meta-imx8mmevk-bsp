@@ -1,5 +1,5 @@
 DESCRIPTION = "Trusted Firmware-A"
-LICENSE = "BSD & Apache-2.0"
+LICENSE = "BSD-3-Clause & Apache-2.0"
 
 PROVIDES = "virtual/trusted-firmware-a"
 
