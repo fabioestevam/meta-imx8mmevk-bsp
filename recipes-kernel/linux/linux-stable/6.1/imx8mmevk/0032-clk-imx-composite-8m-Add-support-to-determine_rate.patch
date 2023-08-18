@@ -1,0 +1,49 @@
+From b43bb7d4b10c0b6cdf20a12f57bd36f2b821330b Mon Sep 17 00:00:00 2001
+From: Adam Ford <aford173@gmail.com>
+Date: Thu, 23 Mar 2023 18:01:24 -0500
+Subject: [PATCH 32/43] clk: imx: composite-8m: Add support to determine_rate
+
+Similar to imx/clk-composite-93 and imx/clk-divider-gate, the
+imx8m_clk_composite_divider_ops can support determine_rate.
+Without this the parent clocks are set to a fixed value, and
+if a consumer needs a slower reate, the clock is divided, but
+the division is only as good as the parent clock rate.
+
+With this added, the system can attempt to adjust the parent rate
+if the proper flags are set which can lead to a more precise clock
+value.
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Link: https://lore.kernel.org/r/20230323230127.120883-2-aford173@gmail.com
+---
+ drivers/clk/imx/clk-composite-8m.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/clk/imx/clk-composite-8m.c b/drivers/clk/imx/clk-composite-8m.c
+index cbf0d7955a00..6883a8199b6c 100644
+--- a/drivers/clk/imx/clk-composite-8m.c
++++ b/drivers/clk/imx/clk-composite-8m.c
+@@ -119,10 +119,17 @@ static int imx8m_clk_composite_divider_set_rate(struct clk_hw *hw,
+ 	return ret;
+ }
+ 
++static int imx8m_clk_divider_determine_rate(struct clk_hw *hw,
++				      struct clk_rate_request *req)
++{
++	return clk_divider_ops.determine_rate(hw, req);
++}
++
+ static const struct clk_ops imx8m_clk_composite_divider_ops = {
+ 	.recalc_rate = imx8m_clk_composite_divider_recalc_rate,
+ 	.round_rate = imx8m_clk_composite_divider_round_rate,
+ 	.set_rate = imx8m_clk_composite_divider_set_rate,
++	.determine_rate = imx8m_clk_divider_determine_rate,
+ };
+ 
+ static u8 imx8m_clk_composite_mux_get_parent(struct clk_hw *hw)
+-- 
+2.34.1
+

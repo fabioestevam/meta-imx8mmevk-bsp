@@ -1,0 +1,35 @@
+From fd28e2412571a3a170ad7bf917ec0f6abc619d72 Mon Sep 17 00:00:00 2001
+From: Adam Ford <aford173@gmail.com>
+Date: Thu, 23 Mar 2023 18:01:25 -0500
+Subject: [PATCH 33/43] clk: imx: Add imx8m_clk_hw_composite_flags macro
+
+In order to set custom flags to imx8m_clk_hw_composite,
+split it off into a separate macro which can accept additional
+flags.
+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+Link: https://lore.kernel.org/r/20230323230127.120883-3-aford173@gmail.com
+---
+ drivers/clk/imx/clk.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index dd49f90110e8..9ec0dca37fea 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -415,6 +415,10 @@ struct clk_hw *__imx8m_clk_hw_composite(const char *name,
+ 	_imx8m_clk_hw_composite(name, parent_names, reg, \
+ 			0, IMX_COMPOSITE_CLK_FLAGS_DEFAULT)
+ 
++#define imx8m_clk_hw_composite_flags(name, parent_names, reg, flags) \
++	_imx8m_clk_hw_composite(name, parent_names, reg, \
++			0, IMX_COMPOSITE_CLK_FLAGS_DEFAULT |  flags)
++
+ #define imx8m_clk_hw_composite_critical(name, parent_names, reg) \
+ 	_imx8m_clk_hw_composite(name, parent_names, reg, \
+ 			0, IMX_COMPOSITE_CLK_FLAGS_CRITICAL)
+-- 
+2.34.1
+
