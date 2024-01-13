@@ -50,10 +50,11 @@ PREFERRED_PROVIDER_virtual/libgles2 ?= "mesa-mainline"
 PREFERRED_PROVIDER_virtual/libgles3 ?= "mesa-mainline"
 PREFERRED_PROVIDER_virtual/mesa ?= "mesa-mainline"
 PREFERRED_PROVIDER_nativesdk-mesa ?= "nativesdk-mesa-mainline"
-# Mesa 22.0.y compatibility with dunfell release
-PREFERRED_PROVIDER_drm ??= "${@'libdrm-mainline' if (d.getVar('LAYERSERIES_CORENAMES') in ["dunfell"]) else 'libdrm'}"
-PREFERRED_PROVIDER_libdrm ??= "${@'libdrm-mainline' if (d.getVar('LAYERSERIES_CORENAMES') in ["dunfell"]) else 'libdrm'}"
-PREFERRED_PROVIDER_wayland-protocols ??= "${@'wayland-protocols-mainline' if (d.getVar('LAYERSERIES_CORENAMES') in ["dunfell"]) else 'wayland-protocols'}"
+PREFERRED_PROVIDER_drm ?= "libdrm-mainline"
+PREFERRED_PROVIDER_libdrm ?= "libdrm-mainline"
+PREFERRED_PROVIDER_nativesdk-libdrm ?= "nativesdk-libdrm-mainline"
+PREFERRED_PROVIDER_wayland-protocols ?= "wayland-protocols-mainline"
+PREFERRED_PROVIDER_nativesdk-wayland-protocols ?= "nativesdk-wayland-protocols-mainline"
 
 # Swupdate
 PREFERRED_VERSION_swupdate = "2023.05"
