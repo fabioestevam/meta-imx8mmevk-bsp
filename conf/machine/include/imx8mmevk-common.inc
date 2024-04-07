@@ -24,7 +24,7 @@ UBOOT_DTB_LOADADDRESS = "0x7ff00000"
 UBOOT_DTBO_LOADADDRESS = "0x7ff80000"
 UBOOT_MACHINE = "imx8mm_evk_defconfig"
 
-U-BOOT-VERSION = "2024.01%"
+U-BOOT-VERSION = "2024.04%"
 
 PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-mainline"
 PREFERRED_PROVIDER_u-boot ?= "u-boot-mainline"
