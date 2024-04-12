@@ -1,7 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-BPV := "${@'.'.join(d.getVar('PV').split('.')[0:2])}"
-KBRANCH:imx8mmevk ?= "linux-${BPV}.y"
+KBRANCH:imx8mmevk ?= "linux-6.6.y"
 KMACHINE:imx8mmevk ?= "imx8mmevk"
 COMPATIBLE_MACHINE = "(imx8mmevk)"
 
