@@ -1,5 +1,4 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/common:${THISDIR}/files/${MACHINE}:${THISDIR}/files:"
-RPROVIDES:${PN} = "virtual/bootloader"
 
 DEPENDS:append:imx8mmevk = "u-boot-mainline-tools-native"
 

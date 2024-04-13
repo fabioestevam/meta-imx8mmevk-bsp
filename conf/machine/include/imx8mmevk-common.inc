@@ -79,10 +79,10 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 IMAGE_FSTYPES ?= "wic.gz wic.xz ext4.gz wic.bmap"
 INITRAMFS_FSTYPES ?= "cpio.xz"
 IMAGE_NAME_SUFFIX = ""
-EXTRA_IMAGEDEPENDS += "virtual/bootloader"
+EXTRA_IMAGEDEPENDS += "u-boot-mainline"
 WKS_FILE = "emmcimage-imx8mmevk.wks"
 IMAGE_BOOT_FILES ?= "${KERNEL_IMAGETYPE}"
-IMAGE_INSTALL:append = " kernel-devicetree virtual/bootloader rng-tools u-boot-default-env btrfs-tools mmc-utils pciutils \
+IMAGE_INSTALL:append = " kernel-devicetree u-boot-mainline rng-tools u-boot-default-env btrfs-tools mmc-utils pciutils \
 			  wireless-regdb-static iw wpa-supplicant "
-do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot virtual/bootloader:do_deploy"
+do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot u-boot-mainline:do_deploy"
 
