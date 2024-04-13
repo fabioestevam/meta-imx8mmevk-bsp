@@ -78,7 +78,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += " \
 # List of images to be built
 IMAGE_FSTYPES ?= "wic.gz wic.xz ext4.gz wic.bmap"
 INITRAMFS_FSTYPES ?= "cpio.xz"
-
+IMAGE_NAME_SUFFIX = ""
 EXTRA_IMAGEDEPENDS += "virtual/bootloader"
 WKS_FILE = "emmcimage-imx8mmevk.wks"
 IMAGE_BOOT_FILES ?= "${KERNEL_IMAGETYPE}"
