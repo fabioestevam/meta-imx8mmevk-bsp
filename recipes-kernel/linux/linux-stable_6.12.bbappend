@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-KBRANCH:imx8mmevk ?= "linux-6.6.y"
+KBRANCH:imx8mmevk ?= "linux-6.12.y"
 KMACHINE:imx8mmevk ?= "imx8mmevk"
 COMPATIBLE_MACHINE = "(imx8mmevk)"
 
