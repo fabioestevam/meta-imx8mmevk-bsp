@@ -1,4 +1,4 @@
-From 3e7590472a49dfd212b5391090a03b88adc28e76 Mon Sep 17 00:00:00 2001
+From 92f1667f4cf15c61f9857b79b17f15d495e6c206 Mon Sep 17 00:00:00 2001
 From: Fabio Estevam <festevam@denx.de>
 Date: Fri, 2 Sep 2022 13:49:28 -0300
 Subject: [PATCH 2/2] mx8mm_evk: Add redundand environment support
@@ -12,7 +12,7 @@ Signed-off-by: Fabio Estevam <festevam@denx.de>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/configs/imx8mm_evk_defconfig b/configs/imx8mm_evk_defconfig
-index ec3206bd64..fb082647a2 100644
+index 788770bb3641..9c6c841108cf 100644
 --- a/configs/imx8mm_evk_defconfig
 +++ b/configs/imx8mm_evk_defconfig
 @@ -5,8 +5,10 @@ CONFIG_SYS_MALLOC_LEN=0x2000000
@@ -26,8 +26,8 @@ index ec3206bd64..fb082647a2 100644
 +CONFIG_ENV_OFFSET_REDUND=0x204000
 +CONFIG_SYS_REDUNDAND_ENVIRONMENT=y
  CONFIG_DM_GPIO=y
- CONFIG_DEFAULT_DEVICE_TREE="imx8mm-evk"
+ CONFIG_DEFAULT_DEVICE_TREE="freescale/imx8mm-evk"
  CONFIG_SPL_TEXT_BASE=0x7E1000
 -- 
-2.25.1
+2.34.1
 
