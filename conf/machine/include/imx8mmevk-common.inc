@@ -53,9 +53,6 @@ PREFERRED_PROVIDER_nativesdk-libdrm ?= "nativesdk-libdrm-mainline"
 PREFERRED_PROVIDER_wayland-protocols ?= "wayland-protocols-mainline"
 PREFERRED_PROVIDER_nativesdk-wayland-protocols ?= "nativesdk-wayland-protocols-mainline"
 
-# Swupdate
-PREFERRED_VERSION_swupdate = "2023.12.1"
-
 # Linux kernel
 KERNEL_IMAGETYPE = "Image"
 FIT_KERNEL_COMP_ALG = "lzo"
