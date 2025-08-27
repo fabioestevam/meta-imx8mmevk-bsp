@@ -1,11 +1,4 @@
-DESCRIPTION = "Trusted Firmware-A"
-LICENSE = "BSD-3-Clause & Apache-2.0"
-
-PROVIDES = "virtual/trusted-firmware-a"
-
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
-inherit deploy nopackages
+LICENSE = "BSD-3-Clause & MIT"
 
 COMPATIBLE_MACHINE ?= "invalid"
 
@@ -22,24 +15,15 @@ TFA_BUILD_DIR ?= "build-${TFA_PLATFORM}"
 # set BUILD_PLAT depending on configured BUILD_DIR
 EXTRA_OEMAKE += "BUILD_PLAT=${TFA_BUILD_DIR}"
 
-# mbed TLS support (set TFA_MBEDTLS to 1 to activate)
-TFA_MBEDTLS ?= "0"
-# sub-directory in which mbedtls will be downloaded
-TFA_MBEDTLS_DIR ?= "mbedtls"
-# This should be set to MBEDTLS download URL if MBEDTLS is needed
-SRC_URI_MBEDTLS ??= ""
-# This should be set to MBEDTLS LIC FILES checksum
-LIC_FILES_CHKSUM_MBEDTLS ??= ""
-# add MBEDTLS to our sources if activated
-SRC_URI += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI_MBEDTLS}', '', d)}"
-# add mbed TLS chksum
-LIC_FILES_CHKSUM += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
-# add mbed TLS to version
-SRCREV_FORMAT:append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
+# We need dtc for dtbs compilation
+# We need openssl for fiptool
+DEPENDS:append = " dtc-native openssl-native"
 
-# U-boot support (set TFA_UBOOT to 1 to activate)
-# When U-Boot support is activated BL33 is activated with u-boot.bin file
-TFA_UBOOT ?= "0"
+PROVIDES = "virtual/trusted-firmware-a"
+
+inherit deploy nopackages
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 # What to build
 # By default we only build bl1, do_deploy will copy
@@ -63,24 +47,11 @@ LD[unexport] = "1"
 # No configure
 do_configure[noexec] = "1"
 
-# We need dtc for dtbs compilation
-# We need openssl for fiptool
-DEPENDS:append = " dtc-native openssl-native"
-
 # Add platform parameter
 EXTRA_OEMAKE += "PLAT=${TFA_PLATFORM}"
 
 # Handle TFA_DEBUG parameter
-EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
-
-# Handle MBEDTLS
-EXTRA_OEMAKE += "${@bb.utils.contains('TFA_MBEDTLS', '1', ' MBEDTLS_DIR=${TFA_MBEDTLS_DIR}', '', d)}"
-
-# Uboot support
-DEPENDS += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot', '', d)}"
-do_compile[depends] += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot:do_deploy', '', d)}"
-EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', ' BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin', '',d)}"
-
+EXTRA_OEMAKE:append = " ${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
 
 do_compile() {
     oe_runmake ${TFA_BUILD_TARGET}
