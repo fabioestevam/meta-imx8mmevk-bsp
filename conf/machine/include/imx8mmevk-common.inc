@@ -24,6 +24,15 @@ UBOOT_DTB_LOADADDRESS = "0x7ff00000"
 UBOOT_DTBO_LOADADDRESS = "0x7ff80000"
 UBOOT_MACHINE = "imx8mm_evk_defconfig"
 
+UBOOT_EXTLINUX = "1"
+UBOOT_EXTLINUX_LABELS = "default"
+UBOOT_EXTLINUX_DEFAULT_LABEL = "i.MX8M Mini EVK"
+
+UBOOT_EXTLINUX_MENU_DESCRIPTION = "i.MX8M Mini EVK"
+UBOOT_EXTLINUX_FDT     = "../imx8mm-evk.dtb"
+UBOOT_EXTLINUX_CONSOLE = "console=${console}"
+UBOOT_EXTLINUX_ROOT   = "root=/dev/mmcblk1p${mmcpart}"
+
 U-BOOT-VERSION = "2024.10%"
 
 PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-mainline"
@@ -78,7 +87,7 @@ INITRAMFS_FSTYPES ?= "cpio.xz"
 IMAGE_NAME_SUFFIX = ""
 EXTRA_IMAGEDEPENDS += "u-boot-mainline"
 WKS_FILE = "emmcimage-imx8mmevk.wks"
-IMAGE_BOOT_FILES ?= "${KERNEL_IMAGETYPE}"
+IMAGE_BOOT_FILES ?= "${KERNEL_IMAGETYPE} extlinux.conf;extlinux/extlinux.conf"
 IMAGE_INSTALL:append = " kernel-devicetree u-boot-mainline rng-tools u-boot-default-env btrfs-tools mmc-utils pciutils \
 			  wireless-regdb-static iw wpa-supplicant "
 do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot u-boot-mainline:do_deploy"
