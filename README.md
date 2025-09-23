@@ -9,11 +9,11 @@ Dependencies
 This layer depends on:
 
 * URI: git://git.yoctoproject.org/poky
-  - branch: kirkstone
+  - branch: scarthgap
   - layers: meta
 
 * URI: https://source.denx.de/denx/meta-mainline-common.git
-  - branch: dunfell-3.1
+  - branch: scarthgap
 
 Building the image
 ------------------
@@ -28,9 +28,9 @@ be cloned into a location accessible to the build system and a branch listed
 below shall be checked out. The examples below will use /path/to/OE/ as a
 location of the metalayers.
 
-* https://source.denx.de/denx/meta-mainline-common.git	(branch: dunfell-3.1)
-* https://github.com/fabioestevam/meta-imx8mmevk-bsp.git	(branch: kirkstone)
-* git://git.yoctoproject.org/poky				(branch: kirkstone)
+* https://source.denx.de/denx/meta-mainline-common.git	(branch: scarthgap)
+* https://github.com/fabioestevam/meta-imx8mmevk-bsp.git	(branch: scarthgap)
+* git://git.yoctoproject.org/poky				(branch: scarthgap)
 
 With all the source artifacts in place, proceed with setting up the build
 using oe-init-build-env as specified in the Yocto Project wiki:
