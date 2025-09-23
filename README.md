@@ -21,7 +21,7 @@ Building the image
 A good starting point for setting up the build environment is is the official
 Yocto Project wiki.
 
-* https://www.yoctoproject.org/docs/3.1/brief-yoctoprojectqs/brief-yoctoprojectqs.html
+* https://docs.yoctoproject.org/5.0.12/
 
 Before attempting the build, the following metalayer git repositories shall
 be cloned into a location accessible to the build system and a branch listed
