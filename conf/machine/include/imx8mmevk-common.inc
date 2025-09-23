@@ -1,5 +1,5 @@
 #@TYPE: Machine
-#@NAME: Compulab i.MX8MM EVK
+#@NAME: NXP i.MX8MM EVK
 #@SOC:  Freescale i.MX8MM
 #@DESCRIPTION: Machine configuration for NXP i.MX8MM EVk
 
