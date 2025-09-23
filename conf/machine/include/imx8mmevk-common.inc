@@ -88,7 +88,6 @@ IMAGE_NAME_SUFFIX = ""
 EXTRA_IMAGEDEPENDS += "u-boot-mainline"
 WKS_FILE = "emmcimage-imx8mmevk.wks"
 IMAGE_BOOT_FILES ?= "${KERNEL_IMAGETYPE} extlinux.conf;extlinux/extlinux.conf"
-IMAGE_INSTALL:append = " kernel-devicetree u-boot-mainline rng-tools u-boot-default-env btrfs-tools mmc-utils pciutils \
-			  wireless-regdb-static iw wpa-supplicant "
+IMAGE_INSTALL:append = " kernel-devicetree u-boot-mainline u-boot-default-env "
 do_image_wic[depends] += "mtools-native:do_populate_sysroot dosfstools-native:do_populate_sysroot u-boot-mainline:do_deploy"
 
