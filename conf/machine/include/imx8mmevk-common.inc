@@ -33,7 +33,7 @@ UBOOT_EXTLINUX_FDT     = "../imx8mm-evk.dtb"
 UBOOT_EXTLINUX_CONSOLE = "console=${console}"
 UBOOT_EXTLINUX_ROOT   = "root=/dev/mmcblk1p${mmcpart}"
 
-U-BOOT-VERSION = "2025.10%"
+U-BOOT-VERSION = "2026.04%"
 
 PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot-mainline"
 PREFERRED_PROVIDER_u-boot ?= "u-boot-mainline"
